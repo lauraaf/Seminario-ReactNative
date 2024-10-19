@@ -1,29 +1,30 @@
+// components/UserList.jsx
+
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, Text } from "react-native";
 
 export default function UserList({ users }) {
   return (
-    <View style={styles.list}>
-      <Text style={styles.title}>Lista de Usuarios</Text>
-      {users.map((user) => (
-        <View key={user._id} style={styles.item}>
-          <Text>Nombre: {user.name}</Text>
-          <Text>Email: {user.mail}</Text>
+    <FlatList
+      data={users}
+      keyExtractor={(item) => item._id}
+      renderItem={({ item }) => (
+        <View style={styles.item}>
+          <Text>Nombre: {item.name}</Text>
+          <Text>Email: {item.mail}</Text>
         </View>
-      ))}
-    </View>
+      )}
+      // Estas propiedades aseguran que el FlatList ocupe el espacio y sea desplazable
+      style={styles.list}
+      contentContainerStyle={{ paddingBottom: 20 }}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   list: {
-    width: "100%",
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 20,
-    marginBottom: 10,
-    textAlign: "center",
+    flexGrow: 1, // Permite que la lista crezca
+    width: "100%", // Hace que la lista ocupe todo el ancho disponible
   },
   item: {
     borderWidth: 1,

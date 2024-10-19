@@ -1,17 +1,26 @@
+// components/UserForm.jsx
+
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { addUser } from "../services/userService";
 
-export default function UserForm({ addUser }) {
+export default function UserForm({ onUserAdded }) {
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = () => {
-    const newUser = { name, mail };
-    addUser(newUser); // Llama a la función para agregar el usuario
-    setMessage("Usuario agregado con éxito");
-    setName("");
-    setMail("");
+  const handleSubmit = async () => {
+    try {
+      const newUser = { name, mail };
+      await addUser(newUser); // Llama al servicio para agregar el usuario
+      setMessage("Usuario agregado con éxito");
+      setName("");
+      setMail("");
+      onUserAdded(); // Recarga la lista de usuarios
+    } catch (error) {
+      setMessage("Error al agregar usuario");
+      console.error(error);
+    }
   };
 
   return (
