@@ -16,7 +16,7 @@ export default function UserForm({ onUserAdded }) {
       setMessage("Usuario agregado con éxito");
       setName("");
       setMail("");
-      onUserAdded(); // Recarga la lista de usuarios
+      onUserAdded(); // Cierra el modal y recarga la lista de usuarios
     } catch (error) {
       setMessage("Error al agregar usuario");
       console.error(error);
@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
   form: {
     width: "100%",
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   input: {
     borderWidth: 1,
