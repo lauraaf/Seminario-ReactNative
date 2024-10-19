@@ -1,5 +1,3 @@
-// components/UserForm.jsx
-
 import React, { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 import { addUser } from "../services/userService";
@@ -7,19 +5,28 @@ import { addUser } from "../services/userService";
 export default function UserForm({ onUserAdded }) {
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
-  const [message, setMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [comment, setComment] = useState("");
+  const [experiencies, setExperiencies] = useState(""); // Esto será un array de IDs, pero por ahora lo manejamos como texto
 
   const handleSubmit = async () => {
     try {
-      const newUser = { name, mail };
+      const newUser = {
+        name,
+        mail,
+        password,
+        comment,
+        experiencies: experiencies.split(","),
+      };
       await addUser(newUser); // Llama al servicio para agregar el usuario
-      setMessage("Usuario agregado con éxito");
       setName("");
       setMail("");
+      setPassword("");
+      setComment("");
+      setExperiencies("");
       onUserAdded(); // Cierra el modal y recarga la lista de usuarios
     } catch (error) {
-      setMessage("Error al agregar usuario");
-      console.error(error);
+      console.error("Error al agregar usuario:", error);
     }
   };
 
@@ -38,8 +45,26 @@ export default function UserForm({ onUserAdded }) {
         onChangeText={setMail}
         style={styles.input}
       />
+      <TextInput
+        placeholder="Contraseña"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={true} // Para ocultar la contraseña
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Comentario"
+        value={comment}
+        onChangeText={setComment}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Experiencias (IDs separados por comas)"
+        value={experiencies}
+        onChangeText={setExperiencies}
+        style={styles.input}
+      />
       <Button title="Enviar" onPress={handleSubmit} />
-      {message ? <Text>{message}</Text> : null}
     </View>
   );
 }
@@ -48,6 +73,7 @@ const styles = StyleSheet.create({
   form: {
     width: "100%",
     paddingHorizontal: 20,
+    marginBottom: 20,
   },
   input: {
     borderWidth: 1,
