@@ -5,11 +5,11 @@ export default function UserList({ users }) {
   return (
     <FlatList
       data={users}
-      keyExtractor={(item) => item._id}
+      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <View style={styles.item}>
-          <Text>Nombre: {item.name}</Text>
-          <Text>Email: {item.mail}</Text>
+          <Text>Nombre: {item.getFullName()}</Text>
+          <Text>Email: {item.getEmail()}</Text>
           <Text>Comentario: {item.comment}</Text>
           <Text>Experiencias: {item.experiencies.join(", ")}</Text>
         </View>

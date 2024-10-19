@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
+import { fetchUsers } from "./services/userService";
+import { BlurView } from "expo-blur";
 import UserForm from "./components/UserForm";
 import UserList from "./components/UserList";
-import { fetchUsers } from "./services/userService";
-import { BlurView } from "expo-blur"; // Importamos el BlurView de expo-blur
+import User from "./models/usermodel"; // Importamos el modelo de usuario
 
 export default function App() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // Aquí guardamos las instancias del modelo User
   const [modalVisible, setModalVisible] = useState(false); // Estado para mostrar/ocultar el modal
 
   // Función para cargar los usuarios desde el servicio
   const loadUsers = async () => {
     try {
-      const data = await fetchUsers();
-      setUsers(data);
+      const data = await fetchUsers(); // Obtenemos los usuarios desde la API
+      const userInstances = data.map(
+        (user) =>
+          new User(
+            user._id,
+            user.name,
+            user.mail,
+            user.password,
+            user.comment,
+            user.experiencies
+          )
+      );
+      setUsers(userInstances); // Guardamos los usuarios como instancias de la clase User
     } catch (error) {
       console.error("Error al cargar usuarios:", error);
     }
@@ -46,7 +58,6 @@ export default function App() {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        {/* Agregamos un View fuera del BlurView para evitar problemas con la interacción */}
         <View style={styles.modalWrapper}>
           <BlurView intensity={100} style={styles.modalBackground}>
             <View style={styles.modalContainer}>
@@ -79,8 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     textAlign: "center",
-    marginTop: 70, // Mueve el título más abajo
-    zIndex: 0, // Asegura que el título no bloquee otros componentes
+    marginTop: 80, // Mueve el título más abajo
   },
   openButton: {
     position: "absolute",
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     zIndex: 10, // Aseguramos que el botón esté por encima de otros componentes
-    elevation: 5, // Esto también ayuda a superponer en Android
+    elevation: 5,
   },
   buttonText: {
     color: "#fff",
