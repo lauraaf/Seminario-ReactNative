@@ -7,23 +7,15 @@ export default function UserForm({ onUserAdded }) {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [comment, setComment] = useState("");
-  const [experiencies, setExperiencies] = useState(""); // Esto será un array de IDs, pero por ahora lo manejamos como texto
 
   const handleSubmit = async () => {
     try {
-      const newUser = {
-        name,
-        mail,
-        password,
-        comment,
-        experiencies: experiencies.split(","),
-      };
+      const newUser = { name, mail, password, comment }; // Eliminamos experiencies
       await addUser(newUser); // Llama al servicio para agregar el usuario
       setName("");
       setMail("");
       setPassword("");
       setComment("");
-      setExperiencies("");
       onUserAdded(); // Cierra el modal y recarga la lista de usuarios
     } catch (error) {
       console.error("Error al agregar usuario:", error);
@@ -56,12 +48,6 @@ export default function UserForm({ onUserAdded }) {
         placeholder="Comentario"
         value={comment}
         onChangeText={setComment}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Experiencias (IDs separados por comas)"
-        value={experiencies}
-        onChangeText={setExperiencies}
         style={styles.input}
       />
       <Button title="Enviar" onPress={handleSubmit} />
