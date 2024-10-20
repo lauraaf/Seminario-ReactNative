@@ -27,7 +27,10 @@ export const addExperience = async (newExperience) => {
 // Eliminar una experiencia de la API
 export const deleteExperience = async (experienceId) => {
   try {
-    await axios.delete(`${API_URL}/${experienceId}`);
+    if (!experienceId) {
+      throw new Error("El ID de la experiencia es indefinido");
+    }
+    await axios.delete(`${API_URL}/${experienceId}`); // Aquí nos aseguramos de que el _id se pase correctamente en la URL
   } catch (error) {
     console.error("Error al eliminar experiencia:", error);
     throw error;

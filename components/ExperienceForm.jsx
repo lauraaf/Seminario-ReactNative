@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // Actualizamos la importación
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import CustomCheckBox from "./CustomCheckBox"; // Importamos el CheckBox personalizado
 import { fetchUsers } from "../services/userService";
 import { addExperience } from "../services/experienceService";
 
@@ -23,6 +31,18 @@ export default function ExperienceForm({ onExperienceAdded }) {
 
     loadUsers();
   }, []);
+
+  const handleSelectParticipant = (userId) => {
+    setParticipants((prevParticipants) => {
+      if (prevParticipants.includes(userId)) {
+        // Si ya está seleccionado, lo eliminamos
+        return prevParticipants.filter((id) => id !== userId);
+      } else {
+        // Si no está seleccionado, lo agregamos
+        return [...prevParticipants, userId];
+      }
+    });
+  };
 
   const handleSubmit = async () => {
     try {
@@ -52,17 +72,18 @@ export default function ExperienceForm({ onExperienceAdded }) {
       </Picker>
 
       <Text style={styles.label}>Participantes:</Text>
-      <Picker
-        selectedValue={participants}
-        onValueChange={(itemValue) => setParticipants([itemValue])} // Manejo básico, ajustable a múltiples selecciones
-        style={styles.input}
-        mode="dropdown"
-      >
-        <Picker.Item label="Seleccionar participantes" value="" />
+      <ScrollView style={styles.scrollView}>
         {users.map((user) => (
-          <Picker.Item key={user._id} label={user.name} value={user._id} />
+          <View key={user._id} style={styles.checkboxContainer}>
+            {/* Aquí estamos utilizando CustomCheckBox */}
+            <CustomCheckBox
+              label={user.name} // Aseguramos que se esté pasando el nombre del usuario como 'label'
+              value={participants.includes(user._id)} // Verifica si el participante está seleccionado
+              onValueChange={() => handleSelectParticipant(user._id)} // Control de selección
+            />
+          </View>
         ))}
-      </Picker>
+      </ScrollView>
 
       <Text style={styles.label}>Descripción:</Text>
       <TextInput
@@ -96,6 +117,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
     backgroundColor: "#fff",
+  },
+  scrollView: {
+    height: 150,
+    marginBottom: 10,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
   },
   textArea: {
     borderWidth: 1,
