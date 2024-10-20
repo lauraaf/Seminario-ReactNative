@@ -44,7 +44,25 @@ export const deleteExperience = async (experienceId) => {
     if (!experienceId) {
       throw new Error("El ID de la experiencia es indefinido");
     }
-    await axios.delete(`${API_URL}/${experienceId}`); // Aseguramos que el _id se pase correctamente
+
+    // Primero obtenemos la experiencia completa para extraer los participantes
+    const experienceResponse = await axios.get(`${API_URL}/${experienceId}`);
+    const participants = experienceResponse.data.participants; // Obtenemos los participantes de la experiencia
+
+    // Verificamos si el vector de participantes existe y tiene usuarios
+    if (participants && participants.length > 0) {
+      // Recorremos el vector de participantes para eliminar la experiencia de sus arrays de experiencias
+      await Promise.all(
+        participants.map(async (userId) => {
+          await axios.delete(
+            `http://10.0.2.2:3000/api/user/delParticipant/${userId}/${experienceId}`
+          );
+        })
+      );
+    }
+
+    // Finalmente eliminamos la experiencia en sí
+    await axios.delete(`${API_URL}/${experienceId}`);
   } catch (error) {
     console.error("Error al eliminar experiencia:", error);
     throw error;

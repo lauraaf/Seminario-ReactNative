@@ -16,6 +16,7 @@
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
+    "android": "^0.0.8",
     "axios": "^1.7.7",
     "expo": "~51.0.28",
     "expo-blur": "~13.0.2",
