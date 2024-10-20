@@ -1,85 +1,89 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
-import ExperienceForm from "../components/ExperienceForm"; // Formulario de experiencia
-import ExperienceList from "../components/ExperienceList"; // Lista de experiencias
+import ExperienceForm from "../components/ExperienceForm";
+import ExperienceList from "../components/ExperienceList";
 import {
   fetchExperiences,
   deleteExperience,
 } from "../services/experienceService";
-import Experience from "../models/experiencemodel"; // Modelo de experiencia
+import { fetchUsers } from "../services/userService"; // Nueva función para cargar todos los usuarios
 
 export default function ExperiencesScreen() {
-  const [experiences, setExperiences] = useState([]); // Estado para almacenar experiencias
-  const [modalVisible, setModalVisible] = useState(false); // Estado para mostrar/ocultar modal
+  const [experiences, setExperiences] = useState([]);
+  const [users, setUsers] = useState([]); // Lista de usuarios
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // Función para cargar las experiencias desde la API
-  const loadExperiences = async () => {
+  // Función para cargar las experiencias y los usuarios
+  const loadExperiencesAndUsers = async () => {
     try {
-      const data = await fetchExperiences();
-      const experienceInstances = data.map(
-        (exp) =>
-          new Experience(exp._id, exp.owner, exp.description, exp.participants)
-      );
-      setExperiences(experienceInstances);
-      console.log("Experiencias cargadas:", data);
+      const [experiencesData, usersData] = await Promise.all([
+        fetchExperiences(),
+        fetchUsers(),
+      ]);
+      setExperiences(experiencesData);
+      setUsers(usersData);
+      console.log("Experiencias:", experiencesData);
+      console.log("Usuarios:", usersData);
     } catch (error) {
-      console.error("Error al cargar experiencias:", error);
+      console.error("Error al cargar experiencias y usuarios:", error);
     }
   };
 
-  // Función para eliminar una experiencia
+  // Obtener el nombre de un usuario a partir de su ID
+  const getUserNameById = (userId) => {
+    const user = users.find((u) => u._id === userId);
+    return user ? user.name : "Desconocido";
+  };
+
   const handleDeleteExperience = async (experienceId) => {
     try {
-      await deleteExperience(experienceId); // Eliminar la experiencia de la base de datos
+      await deleteExperience(experienceId);
       setExperiences((prevExperiences) =>
         prevExperiences.filter((exp) => exp._id !== experienceId)
-      ); // Actualizar el estado local de experiencias
+      );
     } catch (error) {
       console.error("Error al eliminar experiencia:", error);
     }
   };
 
-  // Cargar las experiencias al montar el componente
   useEffect(() => {
-    loadExperiences();
+    loadExperiencesAndUsers();
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Lista de Experiencias</Text>
 
-      {/* Lista de experiencias */}
       <ExperienceList
         experiences={experiences}
+        getUserNameById={getUserNameById} // Pasamos la función para obtener los nombres
         onDeleteExperience={handleDeleteExperience}
       />
 
-      {/* Botón para abrir el formulario de nueva experiencia */}
       <TouchableOpacity
         style={styles.openButton}
-        onPress={() => setModalVisible(true)} // Mostrar el modal
+        onPress={() => setModalVisible(true)}
       >
         <Text style={styles.buttonText}>Crear Nueva Experiencia</Text>
       </TouchableOpacity>
 
-      {/* Modal que contiene el formulario */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)} // Cerrar el modal cuando se presiona el botón de atrás
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalWrapper}>
           <View style={styles.modalContainer}>
             <ExperienceForm
               onExperienceAdded={() => {
-                setModalVisible(false); // Cerrar el modal
-                loadExperiences(); // Recargar las experiencias cuando se agregue una nueva
+                setModalVisible(false);
+                loadExperiencesAndUsers(); // Actualizar la lista de experiencias
               }}
             />
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setModalVisible(false)} // Cerrar el modal
+              onPress={() => setModalVisible(false)}
             >
               <Text style={styles.closeButtonText}>Cerrar</Text>
             </TouchableOpacity>
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // Hacer el fondo semi-transparente
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContainer: {
     width: "90%",

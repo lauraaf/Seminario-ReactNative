@@ -7,28 +7,26 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default function ExperienceList({ experiences, onDeleteExperience }) {
+export default function ExperienceList({
+  experiences,
+  getUserNameById,
+  onDeleteExperience,
+}) {
   return (
     <FlatList
       data={experiences}
-      keyExtractor={(item) => {
-        if (!item._id) {
-          console.error("Experiencia sin _id:", item);
-          return "sin_id"; // Esto no debería ocurrir, es solo para depuración
-        }
-        return item._id.toString();
-      }}
+      keyExtractor={(item) => item._id.toString()}
       renderItem={({ item }) => (
         <View style={styles.item}>
           <Text style={styles.label}>
-            Propietario: {item.owner ? item.owner : "Desconocido"}
+            Propietario: {getUserNameById(item.owner)}
           </Text>
           <Text style={styles.label}>Descripción: {item.description}</Text>
           <Text style={styles.label}>Participantes:</Text>
           {item.participants && item.participants.length > 0 ? (
-            item.participants.map((participant) => (
-              <Text key={participant.toString()} style={styles.participant}>
-                {participant}
+            item.participants.map((participantId) => (
+              <Text key={participantId} style={styles.participant}>
+                {getUserNameById(participantId)}
               </Text>
             ))
           ) : (
@@ -37,10 +35,7 @@ export default function ExperienceList({ experiences, onDeleteExperience }) {
 
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => {
-              console.log("Eliminando experiencia con _id:", item._id);
-              onDeleteExperience(item._id);
-            }}
+            onPress={() => onDeleteExperience(item._id)}
           >
             <Text style={styles.deleteButtonText}>Eliminar</Text>
           </TouchableOpacity>
