@@ -11,7 +11,9 @@ export default function ExperienceList({ experiences, onDeleteExperience }) {
   return (
     <FlatList
       data={experiences}
-      keyExtractor={(item) => item._id.toString()} // Utilizamos directamente el _id de MongoDB
+      keyExtractor={(item) =>
+        item._id ? item._id.toString() : Math.random().toString()
+      } // Aseguramos que cada ítem tenga un _id único o generamos uno si no existe
       renderItem={({ item }) => (
         <View style={styles.item}>
           <Text style={styles.label}>
@@ -21,7 +23,7 @@ export default function ExperienceList({ experiences, onDeleteExperience }) {
           <Text style={styles.label}>Participantes:</Text>
           {item.participants && item.participants.length > 0 ? (
             item.participants.map((participant) => (
-              <Text key={participant._id.toString()} style={styles.participant}>
+              <Text key={participant._id} style={styles.participant}>
                 {participant.name}
               </Text>
             ))
@@ -31,7 +33,7 @@ export default function ExperienceList({ experiences, onDeleteExperience }) {
 
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => onDeleteExperience(item._id)} // Utilizamos el _id que viene del backend
+            onPress={() => onDeleteExperience(item._id)} // Pasamos correctamente el _id de la experiencia a la función onDeleteExperience
           >
             <Text style={styles.deleteButtonText}>Eliminar</Text>
           </TouchableOpacity>
