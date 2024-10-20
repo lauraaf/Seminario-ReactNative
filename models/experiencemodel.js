@@ -1,6 +1,6 @@
 export default class Experience {
-  constructor(id, owner, description, participants = []) {
-    this.id = id;
+  constructor(_id, owner, description, participants = []) {
+    this._id = _id;
     this.owner = owner; // Este será un objeto que contiene el id y nombre del propietario
     this.description = description;
     this.participants = participants; // Array de objetos que contienen los ids y nombres de los participantes

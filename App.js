@@ -10,9 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        {/* Pantalla de Lista de Usuarios */}
         <Tab.Screen name="Usuarios" component={UsersScreen} />
-        {/* Pantalla de Lista de Experiencias */}
         <Tab.Screen name="Experiencias" component={ExperiencesScreen} />
       </Tab.Navigator>
     </NavigationContainer>

@@ -11,20 +11,24 @@ export default function ExperienceList({ experiences, onDeleteExperience }) {
   return (
     <FlatList
       data={experiences}
-      keyExtractor={(item) =>
-        item._id ? item._id.toString() : Math.random().toString()
-      } // Aseguramos que cada ítem tenga un _id único o generamos uno si no existe
+      keyExtractor={(item) => {
+        if (!item._id) {
+          console.error("Experiencia sin _id:", item);
+          return "sin_id"; // Esto no debería ocurrir, es solo para depuración
+        }
+        return item._id.toString();
+      }}
       renderItem={({ item }) => (
         <View style={styles.item}>
           <Text style={styles.label}>
-            Propietario: {item.owner ? item.owner.name : "Desconocido"}
+            Propietario: {item.owner ? item.owner : "Desconocido"}
           </Text>
           <Text style={styles.label}>Descripción: {item.description}</Text>
           <Text style={styles.label}>Participantes:</Text>
           {item.participants && item.participants.length > 0 ? (
             item.participants.map((participant) => (
-              <Text key={participant._id} style={styles.participant}>
-                {participant.name}
+              <Text key={participant.toString()} style={styles.participant}>
+                {participant}
               </Text>
             ))
           ) : (
@@ -33,7 +37,10 @@ export default function ExperienceList({ experiences, onDeleteExperience }) {
 
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => onDeleteExperience(item._id)} // Pasamos correctamente el _id de la experiencia a la función onDeleteExperience
+            onPress={() => {
+              console.log("Eliminando experiencia con _id:", item._id);
+              onDeleteExperience(item._id);
+            }}
           >
             <Text style={styles.deleteButtonText}>Eliminar</Text>
           </TouchableOpacity>

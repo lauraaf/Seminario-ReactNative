@@ -32,7 +32,7 @@ export default function ExperiencesScreen() {
     try {
       await deleteExperience(experienceId); // Eliminar la experiencia de la base de datos
       setExperiences((prevExperiences) =>
-        prevExperiences.filter((exp) => exp.id !== experienceId)
+        prevExperiences.filter((exp) => exp._id !== experienceId)
       ); // Actualizar el estado local de experiencias
     } catch (error) {
       console.error("Error al eliminar experiencia:", error);
