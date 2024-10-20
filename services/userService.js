@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = "http://10.0.2.2:3000/api/user"; // Asegúrate de que esta URL sea correcta
-
+const EXPERIENCE_URL = "http://10.0.2.2:3000/api/experiencias"; // URL correcta de las experiencias
 // Obtener un usuario por su ID
 export const fetchUserById = async (userId) => {
   try {
@@ -34,9 +34,28 @@ export const addUser = async (newUser) => {
   }
 };
 
-// Eliminar un usuario
 export const deleteUser = async (userId) => {
   try {
+    if (!userId) {
+      throw new Error("El ID del usuario es indefinido");
+    }
+
+    // Primero obtenemos todas las experiencias en las que el usuario es participante
+    const experiencesResponse = await axios.get(`${EXPERIENCE_URL}`);
+    const experiences = experiencesResponse.data;
+
+    // Recorremos las experiencias y eliminamos al usuario de los participantes
+    await Promise.all(
+      experiences.map(async (experience) => {
+        if (experience.participants.includes(userId)) {
+          await axios.delete(
+            `${EXPERIENCE_URL}/delParticipant/${experience._id}/${userId}`
+          );
+        }
+      })
+    );
+
+    // Finalmente eliminamos al usuario de la base de datos
     await axios.delete(`${API_URL}/${userId}`);
   } catch (error) {
     console.error("Error al eliminar usuario:", error);

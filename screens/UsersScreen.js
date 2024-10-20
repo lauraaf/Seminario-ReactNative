@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
 import { useFocusEffect } from "@react-navigation/native"; // Importamos useFocusEffect
 import UserForm from "../components/UserForm";
@@ -27,8 +27,8 @@ export default function UsersScreen() {
             user.mail,
             user.password,
             user.comment,
-            user.experiencies,
-          ),
+            user.experiencies
+          )
       );
 
       setUsers(userInstances);
@@ -42,7 +42,7 @@ export default function UsersScreen() {
   useFocusEffect(
     React.useCallback(() => {
       loadUsersAndExperiences(); // Cargamos usuarios y experiencias al enfocar la pantalla
-    }, []),
+    }, [])
   );
 
   const getExperienceDescriptionById = (experienceId) => {
@@ -52,8 +52,14 @@ export default function UsersScreen() {
 
   const handleDeleteUser = async (userId) => {
     try {
+      // Llamamos a la función deleteUser para eliminar al usuario de las experiencias y la base de datos
       await deleteUser(userId);
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+
+      // Actualizamos la lista de usuarios después de eliminar
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
+
+      // Actualizamos también las experiencias por si hay cambios en los participantes
+      loadUsersAndExperiences();
     } catch (error) {
       console.error("Error al eliminar usuario:", error);
     }
