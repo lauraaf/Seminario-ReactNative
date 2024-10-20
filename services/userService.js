@@ -1,5 +1,3 @@
-// services/userService.js
-
 import axios from "axios";
 
 const API_URL = "http://10.0.2.2:3000/api/user";
@@ -21,6 +19,16 @@ export const addUser = async (newUser) => {
     await axios.post(API_URL, newUser);
   } catch (error) {
     console.error("Error al agregar usuario:", error);
+    throw error;
+  }
+};
+
+// Eliminar un usuario de la API
+export const deleteUser = async (userId) => {
+  try {
+    await axios.delete(`${API_URL}/${userId}`);
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
     throw error;
   }
 };

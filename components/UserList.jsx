@@ -1,7 +1,13 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 
-export default function UserList({ users }) {
+export default function UserList({ users, onDeleteUser }) {
   return (
     <FlatList
       data={users}
@@ -12,6 +18,14 @@ export default function UserList({ users }) {
           <Text>Email: {item.getEmail()}</Text>
           <Text>Comentario: {item.comment}</Text>
           <Text>Experiencias: {item.experiencies.join(", ")}</Text>
+
+          {/* Botón Eliminar */}
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => onDeleteUser(item.id)} // Llamamos a la función onDeleteUser con el ID del usuario
+          >
+            <Text style={styles.deleteButtonText}>Eliminar</Text>
+          </TouchableOpacity>
         </View>
       )}
       style={styles.list}
@@ -32,5 +46,16 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
+  },
+  deleteButton: {
+    backgroundColor: "#FF3B30",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  deleteButtonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });
