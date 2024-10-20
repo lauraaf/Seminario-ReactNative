@@ -3,16 +3,22 @@ import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
 import UserForm from "../components/UserForm";
 import UserList from "../components/UserList";
 import { fetchUsers, deleteUser } from "../services/userService";
+import { fetchExperiences } from "../services/experienceService"; // Importamos la función para cargar experiencias
 import User from "../models/usermodel";
 
 export default function UsersScreen() {
   const [users, setUsers] = useState([]);
+  const [experiences, setExperiences] = useState([]); // Estado para las experiencias
   const [modalVisible, setModalVisible] = useState(false);
 
-  const loadUsers = async () => {
+  const loadUsersAndExperiences = async () => {
     try {
-      const data = await fetchUsers();
-      const userInstances = data.map(
+      const [usersData, experiencesData] = await Promise.all([
+        fetchUsers(),
+        fetchExperiences(),
+      ]);
+
+      const userInstances = usersData.map(
         (user) =>
           new User(
             user._id,
@@ -23,10 +29,17 @@ export default function UsersScreen() {
             user.experiencies
           )
       );
+
       setUsers(userInstances);
+      setExperiences(experiencesData); // Guardamos las experiencias
     } catch (error) {
-      console.error("Error al cargar usuarios:", error);
+      console.error("Error al cargar usuarios y experiencias:", error);
     }
+  };
+
+  const getExperienceDescriptionById = (experienceId) => {
+    const experience = experiences.find((exp) => exp._id === experienceId);
+    return experience ? experience.description : "Descripción no encontrada";
   };
 
   const handleDeleteUser = async (userId) => {
@@ -39,13 +52,18 @@ export default function UsersScreen() {
   };
 
   useEffect(() => {
-    loadUsers();
+    loadUsersAndExperiences();
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Lista de Usuarios</Text>
-      <UserList users={users} onDeleteUser={handleDeleteUser} />
+      <UserList
+        users={users}
+        experiences={experiences} // Pasamos las experiencias a UserList
+        getExperienceDescriptionById={getExperienceDescriptionById} // Pasamos la función de obtener descripción
+        onDeleteUser={handleDeleteUser}
+      />
       <TouchableOpacity
         style={styles.openButton}
         onPress={() => setModalVisible(true)}
@@ -63,7 +81,7 @@ export default function UsersScreen() {
             <UserForm
               onUserAdded={() => {
                 setModalVisible(false);
-                loadUsers();
+                loadUsersAndExperiences();
               }}
             />
             <TouchableOpacity
@@ -83,29 +101,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#8B0000",
   },
   title: {
     fontSize: 20,
     marginBottom: 10,
     textAlign: "center",
+    color: "#fff",
   },
   openButton: {
     backgroundColor: "#007AFF",
     padding: 10,
     borderRadius: 5,
+    marginTop: 20,
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
+    textAlign: "center",
   },
   modalWrapper: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContainer: {
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
@@ -119,5 +142,6 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: "#fff",
     fontSize: 16,
+    textAlign: "center",
   },
 });

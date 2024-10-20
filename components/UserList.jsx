@@ -7,22 +7,39 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default function UserList({ users, onDeleteUser }) {
+export default function UserList({
+  users,
+  getExperienceDescriptionById,
+  onDeleteUser,
+}) {
   return (
     <FlatList
       data={users}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <View style={styles.item}>
-          <Text>Nombre: {item.getFullName()}</Text>
-          <Text>Email: {item.getEmail()}</Text>
-          <Text>Comentario: {item.comment}</Text>
-          <Text>Experiencias: {item.experiencies.join(", ")}</Text>
+          <Text style={styles.label}>Nombre: {item.getFullName()}</Text>
+          <Text style={styles.label}>Email: {item.getEmail()}</Text>
+          <Text style={styles.label}>Comentario: {item.comment}</Text>
+          <Text style={styles.label}>Experiencias:</Text>
+
+          {/* Listamos las experiencias */}
+          {item.experiencies && item.experiencies.length > 0 ? (
+            <View style={styles.experienceList}>
+              {item.experiencies.map((expId) => (
+                <Text key={expId} style={styles.experienceItem}>
+                  - {getExperienceDescriptionById(expId)}
+                </Text>
+              ))}
+            </View>
+          ) : (
+            <Text style={styles.noExperienceText}>Sin experiencias</Text>
+          )}
 
           {/* Botón Eliminar */}
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => onDeleteUser(item.id)} // Llamamos a la función onDeleteUser con el ID del usuario
+            onPress={() => onDeleteUser(item.id)}
           >
             <Text style={styles.deleteButtonText}>Eliminar</Text>
           </TouchableOpacity>
@@ -46,9 +63,29 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
+    backgroundColor: "#8B0000",
+  },
+  label: {
+    fontSize: 16,
+    color: "#fff",
+    marginBottom: 5,
+  },
+  experienceList: {
+    paddingLeft: 10, // Agregamos espacio para la lista
+    marginTop: 5,
+  },
+  experienceItem: {
+    fontSize: 14,
+    color: "#fff",
+    marginBottom: 3,
+  },
+  noExperienceText: {
+    fontSize: 14,
+    color: "#fff",
+    fontStyle: "italic",
   },
   deleteButton: {
-    backgroundColor: "#FF3B30",
+    backgroundColor: "#32CD32",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
@@ -57,5 +94,6 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: "#fff",
     fontSize: 16,
+    textAlign: "center",
   },
 });
