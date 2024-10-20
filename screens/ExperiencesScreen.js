@@ -21,7 +21,7 @@ export default function ExperiencesScreen() {
           new Experience(exp._id, exp.owner, exp.description, exp.participants)
       );
       setExperiences(experienceInstances);
-      console.log("Experiencias cargadas:", experiences);
+      console.log("Experiencias cargadas:", data);
     } catch (error) {
       console.error("Error al cargar experiencias:", error);
     }
