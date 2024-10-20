@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
+import { useFocusEffect } from "@react-navigation/native"; // Importamos useFocusEffect
 import UserForm from "../components/UserForm";
 import UserList from "../components/UserList";
 import { fetchUsers, deleteUser } from "../services/userService";
@@ -26,8 +27,8 @@ export default function UsersScreen() {
             user.mail,
             user.password,
             user.comment,
-            user.experiencies
-          )
+            user.experiencies,
+          ),
       );
 
       setUsers(userInstances);
@@ -36,6 +37,13 @@ export default function UsersScreen() {
       console.error("Error al cargar usuarios y experiencias:", error);
     }
   };
+
+  // Usamos useFocusEffect para recargar usuarios y experiencias cada vez que la pantalla se enfoca
+  useFocusEffect(
+    React.useCallback(() => {
+      loadUsersAndExperiences(); // Cargamos usuarios y experiencias al enfocar la pantalla
+    }, []),
+  );
 
   const getExperienceDescriptionById = (experienceId) => {
     const experience = experiences.find((exp) => exp._id === experienceId);
@@ -50,10 +58,6 @@ export default function UsersScreen() {
       console.error("Error al eliminar usuario:", error);
     }
   };
-
-  useEffect(() => {
-    loadUsersAndExperiences();
-  }, []);
 
   return (
     <View style={styles.container}>

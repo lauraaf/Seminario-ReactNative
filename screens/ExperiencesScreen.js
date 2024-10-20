@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import { useFocusEffect } from "@react-navigation/native"; // Importamos useFocusEffect
 import ExperienceForm from "../components/ExperienceForm";
 import ExperienceList from "../components/ExperienceList";
 import {
@@ -29,7 +30,13 @@ export default function ExperiencesScreen() {
     }
   };
 
-  // Obtener el nombre de un usuario a partir de su ID
+  // Usamos useFocusEffect para recargar las experiencias y usuarios cada vez que la pantalla se enfoca
+  useFocusEffect(
+    React.useCallback(() => {
+      loadExperiencesAndUsers(); // Cargamos las experiencias y usuarios al enfocar la pantalla
+    }, []),
+  );
+
   const getUserNameById = (userId) => {
     const user = users.find((u) => u._id === userId);
     return user ? user.name : "Desconocido";
@@ -39,16 +46,12 @@ export default function ExperiencesScreen() {
     try {
       await deleteExperience(experienceId);
       setExperiences((prevExperiences) =>
-        prevExperiences.filter((exp) => exp._id !== experienceId)
+        prevExperiences.filter((exp) => exp._id !== experienceId),
       );
     } catch (error) {
       console.error("Error al eliminar experiencia:", error);
     }
   };
-
-  useEffect(() => {
-    loadExperiencesAndUsers();
-  }, []);
 
   return (
     <View style={styles.container}>
