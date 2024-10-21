@@ -42,11 +42,12 @@ export default function App() {
               />
             );
           },
+          tabBarActiveTintColor: "#42f44b",  // Color del texto cuando está seleccionado
+          tabBarInactiveTintColor: "gray",   // Color del texto cuando no está seleccionado
+          tabBarStyle: {
+            display: "flex",                // Estilo de la barra
+          },
         })}
-        tabBarOptions={{
-          activeTintColor: '#42f44b', 
-          inactiveTintColor: 'gray',   
-        }}
       >
         <Tab.Screen name="Usuarios" component={UsersScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
