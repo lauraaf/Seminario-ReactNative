@@ -1,9 +1,15 @@
 import React from "react";
+import { Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import UsersScreen from "./screens/UsersScreen"; // Pantalla de usuarios
-import ExperiencesScreen from "./screens/ExperiencesScreen"; // Pantalla de experiencias
-import HomeScreen from "./screens/HomeScreen"; // Pantalla de inicio (nueva)
+import UsersScreen from "./screens/UsersScreen";
+import ExperiencesScreen from "./screens/ExperiencesScreen";
+import HomeScreen from "./screens/HomeScreen";
+
+// Importa las imágenes de los iconos
+import iconoUsuarios from './assets/icons/user.jpg';
+import iconoHome from './assets/icons/home.jpg';
+import iconoExperiencias from './assets/icons/experiencias.jpg';
 
 const Tab = createBottomTabNavigator();
 
@@ -11,7 +17,37 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-       initialRouteName="Home"> 
+        initialRouteName="Home" // Home pantalla inicial
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconSource;
+
+            if (route.name === 'Usuarios') {
+              iconSource = iconoUsuarios; 
+            } else if (route.name === 'Home') {
+              iconSource = iconoHome; 
+            } else if (route.name === 'Experiencias') {
+              iconSource = iconoExperiencias; 
+            }
+
+            // Reducir el tamaño del ícono si está seleccionado o no
+            return (
+              <Image
+                source={iconSource}
+                style={{
+                  width: focused ? 30 : 25,  
+                  height: focused ? 30 : 25, 
+                }}
+                resizeMode="contain" // Ajusta el icono dentro del contenedor
+              />
+            );
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: '#42f44b', 
+          inactiveTintColor: 'gray',   
+        }}
+      >
         <Tab.Screen name="Usuarios" component={UsersScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Experiencias" component={ExperiencesScreen} />
