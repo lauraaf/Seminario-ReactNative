@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import CustomCheckBox from "./CustomCheckBox"; // Importamos el CheckBox personalizado
+import CustomCheckBox from "./CustomCheckBox";
 import { fetchUsers } from "../services/userService";
 import { addExperience } from "../services/experienceService";
 
@@ -75,11 +75,10 @@ export default function ExperienceForm({ onExperienceAdded }) {
       <ScrollView style={styles.scrollView}>
         {users.map((user) => (
           <View key={user._id} style={styles.checkboxContainer}>
-            {/* Aquí estamos utilizando CustomCheckBox */}
             <CustomCheckBox
-              label={user.name} // Aseguramos que se esté pasando el nombre del usuario como 'label'
-              value={participants.includes(user._id)} // Verifica si el participante está seleccionado
-              onValueChange={() => handleSelectParticipant(user._id)} // Control de selección
+              label={user.name} 
+              value={participants.includes(user._id)}
+              onValueChange={() => handleSelectParticipant(user._id)}
             />
           </View>
         ))}

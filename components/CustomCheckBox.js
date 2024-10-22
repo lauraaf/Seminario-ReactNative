@@ -10,7 +10,6 @@ export default function CustomCheckBox({ label, onValueChange, value }) {
       <View style={[styles.checkbox, value && styles.checked]}>
         {value && <Text style={styles.checkmark}>✓</Text>}
       </View>
-      {/* Mostramos el label (nombre del usuario) */}
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   label: {
-    fontSize: 16, // Asegúrate de que el estilo del texto sea visible
-    color: "#000", // Ajusta el color para que sea visible sobre el fondo
+    fontSize: 16, 
+    color: "#000",
   },
 });

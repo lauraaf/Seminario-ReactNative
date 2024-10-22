@@ -8,7 +8,6 @@ export default class User {
     this.experiencies = experiencies;
   }
 
-  // Puedes agregar métodos aquí para manejar la lógica relacionada con los usuarios
   getFullName() {
     return this.name;
   }

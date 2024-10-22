@@ -6,7 +6,6 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Home</Text>
       <Text style={styles.title}>Seminario 9 - React Native</Text>
-      {/* Usando una URL válida y directa a una imagen */}
       <Image
         source={{ uri: "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png" }}
         style={{ width: 100, height: 100 }}
@@ -26,6 +25,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#fff', // Para que el texto sea visible sobre el fondo oscuro
+    color: '#fff', 
   }
 });

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   experienceList: {
-    paddingLeft: 10, // Agregamos espacio para la lista
+    paddingLeft: 10,
     marginTop: 5,
   },
   experienceItem: {

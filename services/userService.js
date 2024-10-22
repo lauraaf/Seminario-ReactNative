@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const API_URL = "http://10.0.2.2:3000/api/user"; // Asegúrate de que esta URL sea correcta
-const EXPERIENCE_URL = "http://10.0.2.2:3000/api/experiencias"; // URL correcta de las experiencias
+const API_URL = "http://10.0.2.2:3000/api/user"; 
+const EXPERIENCE_URL = "http://10.0.2.2:3000/api/experiencias";
+
 // Obtener un usuario por su ID
 export const fetchUserById = async (userId) => {
   try {
     const response = await axios.get(`${API_URL}/${userId}`);
-    return response.data.name; // Asumimos que la respuesta contiene el campo "name"
+    return response.data.name; 
   } catch (error) {
     console.error("Error al obtener el usuario:", error);
     throw error;

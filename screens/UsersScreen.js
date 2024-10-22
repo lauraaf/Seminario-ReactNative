@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Modal } from "react-native";
-import { useFocusEffect } from "@react-navigation/native"; // Importamos useFocusEffect
+import { useFocusEffect } from "@react-navigation/native"; 
 import UserForm from "../components/UserForm";
 import UserList from "../components/UserList";
 import { fetchUsers, deleteUser } from "../services/userService";
-import { fetchExperiences } from "../services/experienceService"; // Importamos la función para cargar experiencias
+import { fetchExperiences } from "../services/experienceService";
 import User from "../models/usermodel";
 
 export default function UsersScreen() {
   const [users, setUsers] = useState([]);
-  const [experiences, setExperiences] = useState([]); // Estado para las experiencias
+  const [experiences, setExperiences] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
   const loadUsersAndExperiences = async () => {
@@ -70,8 +70,8 @@ export default function UsersScreen() {
       <Text style={styles.title}>Lista de Usuarios</Text>
       <UserList
         users={users}
-        experiences={experiences} // Pasamos las experiencias a UserList
-        getExperienceDescriptionById={getExperienceDescriptionById} // Pasamos la función de obtener descripción
+        experiences={experiences}
+        getExperienceDescriptionById={getExperienceDescriptionById}
         onDeleteUser={handleDeleteUser}
       />
       <TouchableOpacity

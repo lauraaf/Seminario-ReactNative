@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
-import { useFocusEffect } from "@react-navigation/native"; // Importamos useFocusEffect
+import { useFocusEffect } from "@react-navigation/native"; 
 import ExperienceForm from "../components/ExperienceForm";
 import ExperienceList from "../components/ExperienceList";
 import {
   fetchExperiences,
   deleteExperience,
 } from "../services/experienceService";
-import { fetchUsers } from "../services/userService"; // Nueva función para cargar todos los usuarios
+import { fetchUsers } from "../services/userService"; 
 
 export default function ExperiencesScreen() {
   const [experiences, setExperiences] = useState([]);
-  const [users, setUsers] = useState([]); // Lista de usuarios
+  const [users, setUsers] = useState([]); 
   const [modalVisible, setModalVisible] = useState(false);
 
   // Función para cargar las experiencias y los usuarios
