@@ -10,6 +10,7 @@ import HomeScreen from "./screens/HomeScreen";
 import iconoUsuarios from './assets/icons/user.jpg';
 import iconoHome from './assets/icons/home.jpg';
 import iconoExperiencias from './assets/icons/experiencias.jpg';
+import ExperienceBrowserScreen from "./screens/ExperienceBrowserScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,6 +53,7 @@ export default function App() {
         <Tab.Screen name="Usuarios" component={UsersScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Experiencias" component={ExperiencesScreen} />
+        <Tab.Screen name="Buscador de Experiencias" component={ExperienceBrowserScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
